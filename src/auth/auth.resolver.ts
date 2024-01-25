@@ -1,7 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { SignupInput } from './dto/inputs/signup.input';
-import { AuthResponse } from './dto/inputs/types/auth-response.type';
+import { AuthResponse } from './dto/types/auth-response.type';
+import { LoginInput, SignupInput } from './dto/inputs';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorator/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -14,13 +18,19 @@ export class AuthResolver {
     return this.authService.signUp(signupInput)
   }
 
-  @Mutation( () => String, { name: 'login' })
-  login() {
-    // return this.authService.login()
+  @Mutation( () => AuthResponse, { name: 'login' })
+  login(
+    @Args('loginInput') loginInput:LoginInput
+  ):Promise<AuthResponse>  {
+    return this.authService.login(loginInput)
   }
 
-  @Query( () => String, { name:'revalite' })
-  async revalidateToken() {
-    // return this.authService.revalidateToken()
+  @Query( () => AuthResponse, { name:'revalite' })
+  @UseGuards( JwtAuthGuard )
+  async revalidateToken(
+    @CurrentUser() user:User
+  ) {
+
+    return this.authService.revalidateToken(user);
   }
 }

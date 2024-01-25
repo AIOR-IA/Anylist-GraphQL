@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
@@ -6,6 +6,7 @@ import { SignupInput } from 'src/auth/dto/inputs/signup.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import e from 'express';
 @Injectable()
 export class UsersService {
 
@@ -34,8 +35,20 @@ export class UsersService {
     return [];
   }
 
-  async findOne(id: string): Promise<User> {
-    throw new Error('findOne method not implemented');
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+
+      const user = await this.userRepository.findOneByOrFail({ email: email })
+      if( !user ) throw new NotFoundException(`User with email ${ email } not found.`);
+
+      return user;
+
+    } catch (error) {
+      this.handleDBErrors({
+        code: 'error-001',
+        detail: `${email} not found`
+      });
+    }
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {
