@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       // debug: false,
@@ -17,8 +18,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       plugins: [ ApolloServerPluginLandingPageLocalDefault() ],
       
     }),
-    ItemsModule,
-    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -26,9 +25,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      // entities: [],
       synchronize: true,
+      autoLoadEntities: true
     }),
+    ItemsModule,
   ],
   controllers: [],
   providers: [],
