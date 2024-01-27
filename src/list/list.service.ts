@@ -61,4 +61,16 @@ export class ListService {
      await this.listsRepository.remove( list );
      return { ...list, id };
   }
+
+  async listsCountByUser(user: User):Promise<number> {
+    return this.listsRepository.count({ 
+      where: {
+        user: {
+          id: user.id
+        }
+      }
+    })
+  }
+
+ 
 }
