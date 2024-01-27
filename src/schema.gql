@@ -27,8 +27,12 @@ type AuthResponse {
 }
 
 type List {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """id list"""
+  id: ID!
+
+  """name list"""
+  name: String!
+  user: User!
 }
 
 type Query {
@@ -37,7 +41,8 @@ type Query {
   user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
-  list(id: Int!): List!
+  listAll(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: ID!): List!
 }
 
 """Enum for validating a userRole"""
@@ -61,7 +66,7 @@ type Mutation {
   executeSeed: Boolean!
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
-  removeList(id: Int!): List!
+  removeList(id: ID!): List!
 }
 
 input SignupInput {
@@ -96,12 +101,10 @@ input UpdateItemInput {
 }
 
 input CreateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
 }
 
 input UpdateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  id: ID!
 }
