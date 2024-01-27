@@ -25,11 +25,10 @@ export class ItemsResolver {
   @Query(() => [Item], { name: 'items' })
   async findAll(
     @CurrentUser() user:User,
-    @Args() pagination:PaginationArgs,
-    @Args() search:SearchArgs
+    @Args() paginationArgs:PaginationArgs,
+    @Args() searchArgs:SearchArgs
   ): Promise<Item[]> {
-    console.log({pagination, search})
-    return this.itemsService.findAll(user, pagination);
+    return this.itemsService.findAll(user, paginationArgs, searchArgs);
   }
 
   @Query(() => Item, { name: 'item' })
