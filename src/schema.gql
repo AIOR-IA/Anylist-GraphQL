@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Item {
-  id: ID!
-  name: String!
-  quantity: Float!
-  quantityUnits: String
-}
-
 type User {
   """Uuid user"""
   id: ID!
@@ -16,6 +9,16 @@ type User {
   fullName: String!
   isActive: Boolean!
   roles: [String!]!
+  lastUpdateBy: User
+  items: [Item!]!
+  itemsCount: Int!
+}
+
+type Item {
+  id: ID!
+  name: String!
+  quantityUnits: String
+  user: User!
 }
 
 type AuthResponse {
@@ -24,33 +27,29 @@ type AuthResponse {
 }
 
 type Query {
+  revalite: AuthResponse!
+  users(roles: [ValidRoles!] = []): [User!]!
+  user(id: ID!): User!
   items: [Item!]!
   item(id: ID!): Item!
-  users: [User!]!
-  revalite: AuthResponse!
+}
+
+"""Enum for validating a userRole"""
+enum ValidRoles {
+  admin
+  user
+  superUser
 }
 
 type Mutation {
+  signin(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+  createUser(createUserInput: SignupInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  blockUser(id: ID!): User!
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
-  createUser(createUserInput: SignupInput!): User!
-  blockUser(id: ID!): User!
-  signin(signupInput: SignupInput!): AuthResponse!
-  login(loginInput: LoginInput!): AuthResponse!
-}
-
-input CreateItemInput {
-  name: String!
-  quantity: Float!
-  quantityUnits: String
-}
-
-input UpdateItemInput {
-  name: String
-  quantity: Float
-  quantityUnits: String
-  id: ID!
 }
 
 input SignupInput {
@@ -62,4 +61,24 @@ input SignupInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
+}
+
+input CreateItemInput {
+  name: String!
+  quantityUnits: String
+}
+
+input UpdateItemInput {
+  name: String
+  quantityUnits: String
+  id: ID!
 }
