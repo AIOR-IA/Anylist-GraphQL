@@ -6,6 +6,7 @@ import { ItemsService } from 'src/items/items.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { SEED_ITEMS, SEED_USERS } from './data/seed-data';
 
 @Injectable()
 export class SeedService {
@@ -37,24 +38,53 @@ export class SeedService {
          // delete DB : Remove All
          await this.deleteDatabase();
 
+        // Create Users
+        const user = await this.loadUsers();
 
+        // Create Items
+        await this.loadItems( user );
 
         return true;
     }
 
     async deleteDatabase() {
 
-        // borrar items
+        // DELETE items
         await this.itemsRepository.createQueryBuilder()
             .delete()
             .where({})
             .execute();
 
-        // borrar users
+        // DELETE users
         await this.usersRepository.createQueryBuilder()
             .delete()
             .where({})
             .execute();
+
+    }
+
+    async loadUsers(): Promise<User> {
+
+        const users = [];
+
+        for (const user of SEED_USERS ) {
+            users.push( await this.usersService.create( user ) )
+        }
+
+        return users[0];
+
+    }
+
+
+    async loadItems( user: User ): Promise<void> {
+
+        const itemsPromises = [];
+
+        for (const item of SEED_ITEMS ) {
+            itemsPromises.push( this.itemsService.create( item, user ) );
+        }
+
+        await Promise.all( itemsPromises );
 
     }
 }

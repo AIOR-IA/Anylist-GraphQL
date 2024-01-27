@@ -7,7 +7,7 @@ export class SeedResolver {
     
   }
 
-  @Mutation( () => Boolean, { name: 'executeSeed', description: 'Ejecuta la construcción de la base de datos' })
+  @Mutation( () => Boolean, { name: 'executeSeed', description: 'Run the database build' })
   async executeSeed(): Promise<boolean> {
     
     return this.seedService.executeSeed();
