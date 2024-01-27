@@ -1,4 +1,4 @@
-import { Resolver } from '@nestjs/graphql';
+import { Mutation, Resolver } from '@nestjs/graphql';
 import { SeedService } from './seed.service';
 
 @Resolver()

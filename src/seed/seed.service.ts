@@ -34,10 +34,27 @@ export class SeedService {
             throw new UnauthorizedException('We cannot run SEED on Prod');
         }
 
-
+         // delete DB : Remove All
+         await this.deleteDatabase();
 
 
 
         return true;
+    }
+
+    async deleteDatabase() {
+
+        // borrar items
+        await this.itemsRepository.createQueryBuilder()
+            .delete()
+            .where({})
+            .execute();
+
+        // borrar users
+        await this.usersRepository.createQueryBuilder()
+            .delete()
+            .where({})
+            .execute();
+
     }
 }
