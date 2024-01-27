@@ -26,12 +26,18 @@ type AuthResponse {
   user: User!
 }
 
+type List {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   revalite: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
+  list(id: Int!): List!
 }
 
 """Enum for validating a userRole"""
@@ -53,6 +59,9 @@ type Mutation {
 
   """Run the database build"""
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: Int!): List!
 }
 
 input SignupInput {
@@ -84,4 +93,15 @@ input UpdateItemInput {
   name: String
   quantityUnits: String
   id: ID!
+}
+
+input CreateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
